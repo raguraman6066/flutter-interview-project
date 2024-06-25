@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 class DescriptionPage extends StatefulWidget {
   const DescriptionPage({super.key});
@@ -16,6 +18,14 @@ class _DescriptionPageState extends State<DescriptionPage> {
     'assets/3.jpg',
   ];
   final CarouselController _controller = CarouselController();
+  Future<void> share() async {
+    await FlutterShare.share(
+      title: 'Example share',
+      text: 'Check out this amazing surf session!',
+      linkUrl: 'https://flutter.dev/',
+      chooserTitle: 'Example Chooser Title',
+    );
+  }
 
   int _current = 0;
   @override
@@ -32,66 +42,114 @@ class _DescriptionPageState extends State<DescriptionPage> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Stack(
-              children: [
-                CarouselSlider(
-                  items: imgList
-                      .map((item) => Container(
-                            child: Center(
-                              child: Image.asset(
-                                item,
-                                fit: BoxFit.cover,
-                                height: 200,
-                                width: MediaQuery.of(context).size.width * 0.9,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 250,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Stack(
+                children: [
+                  CarouselSlider(
+                    items: imgList
+                        .map((item) => Container(
+                              child: Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.asset(
+                                    item,
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.95,
+                                  ),
+                                ),
                               ),
+                            ))
+                        .toList(),
+                    carouselController: _controller,
+                    options: CarouselOptions(
+                      height: 200.0,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 1.0,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _current = index;
+                        });
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 75.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: imgList.asMap().entries.map((entry) {
+                        return GestureDetector(
+                          onTap: () => _controller.animateToPage(entry.key),
+                          child: Container(
+                            width: 10.0,
+                            height: 10.0,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.white)
+                                  .withOpacity(
+                                      _current == entry.key ? 0.9 : 0.4),
                             ),
-                          ))
-                      .toList(),
-                  carouselController: _controller,
-                  options: CarouselOptions(
-                    height: 200.0,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 1.0,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _current = index;
-                      });
-                    },
-                  ),
-                ),
-                Positioned(
-                  bottom: 10.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: imgList.asMap().entries.map((entry) {
-                      return GestureDetector(
-                        onTap: () => _controller.animateToPage(entry.key),
-                        child: Container(
-                          width: 10.0,
-                          height: 10.0,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 4.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.white)
-                                .withOpacity(_current == entry.key ? 0.9 : 0.4),
                           ),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(onPressed: () {}, icon: Icon(Icons.star)),
+                        IconButton(
+                            onPressed: () {}, icon: Icon(Icons.favorite)),
+                        IconButton(onPressed: share, icon: Icon(Icons.share)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.bookmark,
+                    color: Colors.indigo.shade900,
+                  ),
+                  Text('1034'),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Icon(Icons.favorite, color: Colors.indigo.shade900),
+                  Text('1034'),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
