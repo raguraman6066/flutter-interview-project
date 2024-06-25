@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10),
                     Container(
-                      height: 150,
+                      height: 180,
                       child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
       margin: EdgeInsets.only(right: 10),
       padding: EdgeInsets.all(10),
       width: 300,
-      height: 150,
+      height: 200,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10),
@@ -247,7 +247,15 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Divider(),
-          SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                'assets/fivepeople.png',
+                width: 150,
+              ),
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
